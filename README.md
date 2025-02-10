@@ -31,6 +31,7 @@ services:
     network_mode: host
     volumes:
       - /etc/localtime:/etc/localtime:ro
+      - /etc/nginx/conf.d:/etc/nginx/conf.d
       - $_apps_data:/usr/local/openresty/nginx
     environment:
       - TZ=Asia/Shanghai
