@@ -20,7 +20,7 @@ services:
     restart: always
     network_mode: host
     volumes:
-			- /data/deploy:/data/deploy
+      - /data/deploy:/data/deploy
       - /etc/localtime:/etc/localtime:ro
       - /etc/nginx/conf.d:/etc/nginx/conf.d
       - $_app_data:/usr/local/openresty/nginx
