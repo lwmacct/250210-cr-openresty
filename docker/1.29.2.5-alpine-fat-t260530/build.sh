@@ -80,8 +80,8 @@ EOF
     echo "image: $_repository"
     echo "cache: $_buildcache"
     echo "-----------------------------------"
-    # docker buildx build --builder default --platform linux/arm64 -t "$_repository" --network host --progress plain --load --cache-to "type=registry,ref=$_buildcache,mode=max" --cache-from "type=registry,ref=$_buildcache" . && {
-    docker buildx build --builder default --platform linux/arm64 -t "$_repository" --network host --progress plain --load . && {
+    # docker buildx build --builder default --platform linux/amd64 -t "$_repository" --network host --progress plain --load --cache-to "type=registry,ref=$_buildcache,mode=max" --cache-from "type=registry,ref=$_buildcache" . && {
+    docker buildx build --builder default --platform linux/amd64 -t "$_repository" --network host --progress plain --load . && {
       # true/false
       if false; then
         docker rm -f sss >/dev/null 2>&1 || true
