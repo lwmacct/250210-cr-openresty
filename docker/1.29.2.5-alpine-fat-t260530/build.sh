@@ -30,12 +30,6 @@ RUN set -eux; \
         busybox-extras tini bash jq bc curl wget vim sudo tzdata socat iproute2 tmux apache2-utils wrk rsync;
 
 RUN set -eux; \
-    echo "创建 Nginx 软链接"; \
-    mv /usr/local/openresty/nginx/sbin/nginx /usr/local/bin/; \
-    ln -sf /usr/local/bin/nginx /usr/local/openresty/nginx/sbin/nginx; \
-    cp -a /usr/local/openresty/nginx/ /usr/local/openresty/nginx.bak;
-
-RUN set -eux; \
     echo "安装常用 OpenResty 模块"; \
     opm get \
         openresty/lua-resty-redis \
@@ -46,6 +40,13 @@ RUN set -eux; \
         openresty/lua-resty-string \
 				ledgetech/lua-resty-http \
 				thibaultcha/lua-resty-mlcache;
+
+
+RUN set -eux; \
+    echo "创建 Nginx 软链接"; \
+    mv /usr/local/openresty/nginx/sbin/nginx /usr/local/bin/; \
+    ln -sf /usr/local/bin/nginx /usr/local/openresty/nginx/sbin/nginx; \
+    cp -a /usr/local/openresty/nginx/ /usr/local/openresty/nginx.bak;
 
 COPY file/entry.sh /usr/local/bin/entry.sh
 
