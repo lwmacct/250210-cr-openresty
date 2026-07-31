@@ -24,3 +24,6 @@ includes:
   cmd:
     taskfile: .task/cmd.yml
     optional: true
+
+  container:
+    taskfile: ./containers/latest/Taskfile.yml

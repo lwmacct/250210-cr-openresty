@@ -13,10 +13,11 @@
 默认命令为：
 
 ```shell
-openresty -g "daemon off;"
+entrypoint.sh openresty -g "daemon off;"
 ```
 
-启动链为 `tini -> entrypoint.sh -> /entrypoint.d/*.sh -> OpenResty`。只有启动 OpenResty 时才执行入口脚本；执行 `sh` 等其他命令时会直接跳过。
+默认启动链为 `tini -> entrypoint.sh -> /etc/entrypoint.d/*.sh -> OpenResty`。
+覆盖容器命令时，由 `tini` 直接执行指定命令，不会隐式运行启动脚本。
 
 ## Assets
 
@@ -24,8 +25,11 @@ openresty -g "daemon off;"
 
 ```text
 assets/
-├── entrypoint.d/
-│   └── 10-test-config.sh
+├── etc/
+│   ├── entrypoint.d/
+│   │   └── .gitkeep
+│   └── profile.d/
+│       └── 10-openresty-path.sh
 └── usr/local/bin/
     └── entrypoint.sh
 ```
@@ -34,20 +38,41 @@ assets/
 
 - HTTP: `/etc/nginx/conf.d/*.conf`
 - Main context and Stream: `/etc/nginx/conf.d/*.main`
-- Entrypoint hooks: executable `/entrypoint.d/*.sh`, executed in lexical order
+- Entrypoint hooks: `/etc/entrypoint.d/*.sh`, executed by Bash in lexical order with the target command as arguments
 
 不要挂载整个 `/usr/local/openresty/nginx` 目录。
 
-镜像预置的 `10-test-config.sh` 会在默认启动前执行 `openresty -t`。覆盖命令为 `sh` 等非 OpenResty 命令时，入口 hooks 会跳过。
+可以只读挂载整个启动脚本目录。脚本不需要执行权限：
+
+```shell
+docker run --rm \
+  --volume "$(pwd)/entrypoint.d:/etc/entrypoint.d:ro" \
+  IMAGE
+```
+
+直接运行命令会跳过启动脚本。需要执行启动脚本时，显式运行 `entrypoint.sh` 并传入要执行的命令：
+
+```shell
+docker run --rm IMAGE entrypoint.sh openresty -t
+```
+
+可以直接运行 Bash 或 BusyBox 工具：
+
+```shell
+docker run --rm IMAGE bash
+docker run --rm IMAGE cat /etc/os-release
+```
 
 ## Build
 
 ```shell
-containers/latest/build.sh ghcr.io/lwmacct/250210-cr-openresty:latest
+task container:build:local
 ```
 
-默认构建并推送：
+默认在当前平台构建 `cr-openresty:latest`，并加载到本地 Docker：
 
 ```shell
-PLATFORMS=linux/amd64,linux/arm64 containers/latest/build.sh
+task container:build:local IMAGE=cr-openresty:dev
 ```
+
+该任务不会推送镜像。多架构构建和 GHCR 发布仅由 `v*` tag 触发的 GitHub Actions 工作流执行。

@@ -17,14 +17,16 @@ task -a
 ### Build Container
 
 ```shell
-containers/latest/build.sh ghcr.io/lwmacct/250210-cr-openresty:latest
+task container:build:local
 ```
 
 ### Run Container
 
 ```shell
-docker run --rm -p 8080:80 ghcr.io/lwmacct/250210-cr-openresty:latest
+docker run --rm -p 8080:80 cr-openresty:latest
 ```
+
+本地构建任务不会推送镜像。多架构镜像仅在推送 `v*` tag 后由 GitHub Actions 发布到 GHCR。
 
 HTTP configuration files are mounted under `/etc/nginx/conf.d/*.conf`. Main-context configuration, including `stream` blocks, uses `/etc/nginx/conf.d/*.main`.
 

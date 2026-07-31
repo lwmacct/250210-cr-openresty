@@ -1,0 +1,19 @@
+version: "3"
+
+tasks:
+  build:local:
+    desc: 构建并加载当前平台的本地 OpenResty 镜像
+    vars:
+      BUILDER: '{{.BUILDER | default "default"}}'
+      IMAGE: '{{.IMAGE | default "cr-openresty:latest"}}'
+    cmds:
+      - >-
+        docker buildx build
+        --builder "{{.BUILDER}}"
+        --file "{{.TASKFILE_DIR}}/Dockerfile"
+        --tag "{{.IMAGE}}"
+        --network host
+        --progress plain
+        --provenance=false
+        --load
+        "{{.TASKFILE_DIR}}/../.."
