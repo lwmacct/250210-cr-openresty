@@ -1,0 +1,6 @@
+**
+!containers/
+!containers/latest/
+!containers/latest/Dockerfile
+!containers/latest/assets/
+!containers/latest/assets/**

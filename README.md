@@ -1,13 +1,36 @@
-# Overview
-- Use [Taskfile](https://taskfile.dev) to manage the project's CLI
-- Use [Dev Container](https://code.visualstudio.com/docs/devcontainers/containers) to create a development environment
-- https://www.yuque.com/lwmacct/vscode/dev-containers
+# cr-openresty
+
+## Quick Start
+
+### Init Development Environment
+
+```shell
+pre-commit install
+```
+
+### List All Available Tasks
+
 ```shell
 task -a
 ```
 
-# Related Links
-- 代码仓库: https://github.com/lwmacct/250210-cr-openresty
-- 语雀文档: https://www.yuque.com/lwmacct/docker-run/openresty
-- 官方仓库: https://github.com/openresty/openresty
-- 配置文档: https://openresty.org/cn/
+### Build Container
+
+```shell
+containers/latest/build.sh ghcr.io/lwmacct/250210-cr-openresty:latest
+```
+
+### Run Container
+
+```shell
+docker run --rm -p 8080:80 ghcr.io/lwmacct/250210-cr-openresty:latest
+```
+
+HTTP configuration files are mounted under `/etc/nginx/conf.d/*.conf`. Main-context configuration, including `stream` blocks, uses `/etc/nginx/conf.d/*.main`.
+
+## Related Links
+
+- [OpenResty](https://openresty.org/)
+- [Docker OpenResty](https://github.com/openresty/docker-openresty)
+- [Taskfile](https://taskfile.dev/)
+- [Pre-commit](https://pre-commit.com/)
